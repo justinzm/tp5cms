@@ -1,0 +1,83 @@
+{include file="public/header"/}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> {$navmenutitle} <span class="c-gray en">&gt;</span> {$navmenutitlenav} <a class="btn btn-success radius r refresh" id="btn-refresh" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="r">数据库中共有 <strong>{$count}</strong> 张表，共计{$total}</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg ">
+		<thead>
+			<tr class="text-c">
+				<th>文件名称</th>
+				<th width="140">文件大小</th>
+				<th width="200">备份时间</th>				
+				<th width="100">卷号</th>
+				<th width="220">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="flist" id="flist"}
+				<tr class="text-c">
+					<td>{$flist.name}</td>
+					<td>{$flist.size|format_bytes}</td>
+					<td>{$flist.time|date="Y-m-d H:i:s",###}</td>				
+					<td>{$flist.number}</td>
+					<td class="td-manage">
+						<a class="btn btn-info" href="__ROOT__/admin/Tools/restoredata?sqlfilepre={$flist['name']}">恢复</a>
+						<a class="btn btn-success" href="__ROOT__/admin/Tools/downFile?type=sql&file={$flist['name']}">下载</a>
+						<a class="btn btn-danger"  href="javascript:void(0)" onclick="delSqlFiles('{$flist.name}')">删除</a>
+					</td>
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+	</div>
+</div>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  {"orderable":false,"aTargets":[0,1,2,3,4]}// 制定列不参与排序
+		]
+	});
+	$('.table-sort tbody').on( 'click', 'tr', function () {
+		if ( $(this).hasClass('selected') ) {
+			$(this).removeClass('selected');
+		}
+		else {
+			//$(this).$('tr.selected').removeClass('selected');
+			$(this).addClass('selected');
+		}
+	});
+});
+
+//删除数据
+function delSqlFiles(table){
+	var submitData = {
+		table : table,
+    }
+    $.post("{:url('delSqlFiles')}", submitData, function(data) {
+    	if(data['code'] == 0){
+    		layer.msg('没有权限!',{icon: 5,time:1000});
+    		return;
+    	}
+		if (data.stat == "ok") {
+			window.location.reload();
+			layer.msg(data.msg,{icon:1,time:1000});
+		}else{
+			layer.msg('删除失败!',{icon:2,time:1000});
+		}
+	}, "json");
+}
+
+</script>
+</body>
+</html>

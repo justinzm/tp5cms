@@ -1,0 +1,248 @@
+{include file="public/header"/}
+<article class="page-container">
+	<form class="form form-horizontal" id="formEdit" name="adminForm">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> 文章标题：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="title" datatype="s2-40" errormsg="标题至少2个字符,最多40个字符！" nullmsg="文章标题必须输入"  value="{$afind.title}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">文章别名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="alias" value="{$afind.alias}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">文章关键词：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="metakeys" value="{$afind.metakeys}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">来源/作者：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="author" value="{$afind.author}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">所属单元：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select name="s_id" class="select" onchange="changeCatList();">
+						<option value="0">请选择文章单元</option>
+						{volist name="slist" id="slist"}
+                            <option value="{$slist.id}" {eq name="slist.id" value="$afind.s_id"}selected = "selected"{/eq} >{$slist.title}</option>
+                        {/volist}
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">所属分类：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select name="c_id" class="select">
+						<option value="0">请选择文章分类</option>
+						{volist name="clist" id="clists"}
+                            <option value="{$clists.id}" {eq name="clists.id" value="$afind.c_id"}selected = "selected"{/eq} >{$clists.title}</option>
+                        {/volist}
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">发布时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" name="addtime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="input-text Wdate" value="{$afind.addtime|msubstr=0,10,'utf-8',false}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">文章摘要：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="metadesc" cols="" rows="" class="textarea"  placeholder="摘要写点什么……">{$afind.metadesc}</textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">排序：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="ordernum" value="{$afind.ordernum}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">单页图片：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div class="uploader-thum-container">					
+					<div id="fileList" class="uploader-list">
+						{notempty name="afind.img"}
+						<div class="file-item thumbnail">
+							<img src="__ROOT__/{$afind.img}" width="100" height="100">
+						</div>
+						{/notempty}
+					</div>					
+					<div id="filePicker">修改图片</div>
+					<div id="btn-star" class="btn btn-default btn-uploadstar radius ml-10">删除</div>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">是否置顶：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="istop" type="radio" id="status-1" value="0" {eq name="afind.istop" value="0"} checked="checked"{/eq}>
+					<label for="status-1">不置顶</label>
+				</div>
+				<div class="radio-box">
+					<input name="istop" type="radio" id="status-2" value="1" {eq name="afind.istop" value="1"} checked="checked"{/eq}>
+					<label for="status-2">置顶</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">状态：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" value="1" {eq name="afind.status" value="1"} checked="checked"{/eq}>
+					<label for="status-1">启动</label>
+				</div>
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-2" value="0" {eq name="afind.status" value="0"} checked="checked"{/eq}>
+					<label for="status-2">停用</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">文章内容：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<script id="editor" type="text/plain" style="width:100%;height:400px;"></script> 
+			</div>
+		</div>
+		<input name="id" type="hidden" value="{$afind.id}">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/icheck/jquery.icheck.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/lib/webuploader/0.1.5/webuploader.css"/>
+<script type="text/javascript" src="__PUBLIC__/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/webuploader/0.1.5/uploaderImgOne.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/My97DatePicker/WdatePicker.js"></script>  
+
+<script type="text/javascript" src="__PUBLIC__/lib/ueditor/ueditor.config.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/ueditor/ueditor.all.min.js"> </script> 
+<script type="text/javascript" src="__PUBLIC__/lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	var ue = UE.getEditor('editor');
+	ue.addListener("ready", function () {
+        ue.setContent('{$afind.content}');
+	});
+
+	//验证判断，并提交
+	$("#formEdit").validate({
+		rules:{
+			title:{
+				required:true,
+			},
+			ordernum:{
+				number:true,
+			},
+			s_id:{
+				digits:true,
+			}
+		},
+		messages: {
+	    	s_id: "请选择文章单元",
+	    },
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			ajaxSubmitBtn();
+		}
+	});
+});
+
+function ajaxSubmitBtn(){
+	var content = UE.getEditor('editor').getContent();
+	var submitData = {
+		id          : $('input[name="id"]').val(),
+		title       : $('input[name="title"]').val(),
+		alias       : $('input[name="alias"]').val(),
+		metakeys    : $('input[name="metakeys"]').val(),
+		author      : $('input[name="author"]').val(),
+		s_id    	: $('select[name="s_id"]').val(),
+		c_id    	: $('select[name="c_id"]').val(),
+		addtime     : $('input[name="addtime"]').val(),
+		metadesc    : $('textarea[name="metadesc"]').val(),
+		ordernum    : $('input[name="ordernum"]').val(),
+		img         : imgFile,
+		istop		: $('input[name="istop"]:checked').val(),
+		status      : $('input[name="status"]:checked').val(),
+		content   	: content,
+    }
+    $.post("{:url('Article/update')}", submitData, function(data) {
+		if (data == 0) {
+			alert("失败");
+		}else{
+			window.parent.location.reload();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	}, "json");
+}
+
+var cat = new Array;
+    cat[0]=new Array('0','-1','请选择文章分类');
+
+{volist name="clist" id="category" key="k"}
+cat[{$k}]=new Array('{$category["s_id"]}','{$category["id"]}','{$category["title"]}');
+{/volist}
+
+function changeCatList(){
+  var secobj=document.adminForm.s_id;
+  var catobj=document.adminForm.c_id;
+  catobj.innerHTML="";
+  var sid=secobj.options[secobj.selectedIndex].value;
+    var j=0;
+    for(var i=0;i<cat.length;i++){
+        if(cat[i][0]==sid){
+            var opt=new Option();
+            opt.value=cat[i][1];
+            opt.text=cat[i][2];
+            catobj.options[j++]=opt;
+        }
+    }
+    if(catobj.options.length<1){
+        var opt=new Option();
+        opt.value=cat[0][1];
+        opt.text=cat[0][2];
+        catobj.options[0]=opt;
+    }
+}
+</script>
+
+</body>
+</html>

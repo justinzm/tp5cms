@@ -1,0 +1,24 @@
+{
+    "remotePath": "/www/web/www_kekepu_cn/public_html/",
+    "host": "118.31.43.97",
+    "username": "root",
+    "password": "Ajdx2017",
+    "port": 22,
+    "secure": false,
+    "protocol": "sftp",
+    "uploadOnSave": false,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "passphrase": null,
+    "ignore": [
+        "\\.vscode",
+        "\\.git",
+        "\\.DS_Store"
+    ],
+    "generatedFiles": {
+        "uploadOnSave": false,
+        "extensionsToInclude": [],
+        "path": ""
+    }
+}

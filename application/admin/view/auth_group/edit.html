@@ -1,0 +1,85 @@
+{include file="public/header"/}
+<article class="page-container">
+	<form action="" class="form form-horizontal" id="form-menu-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> 角色名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="title" value="{$agfind.title}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">状态：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" value="1" {eq name="agfind.status" value="1"} checked="checked"{/eq}>
+					<label for="status-1">启动</label>
+				</div>
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-2" value="0" {eq name="agfind.status" value="0"} checked="checked"{/eq}>
+					<label for="status-2">停用</label>
+				</div>
+			</div>
+		</div>
+		<input name="id" type="hidden" value="{$agfind.id}">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;编辑&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	$("#form-menu-add").validate({
+		rules:{
+			title:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			ajaxSubmit();
+		}
+	});
+});
+
+function ajaxSubmit(){
+	var submitData = {
+		id       : $('input[name="id"]').val(),
+		title    : $('input[name="title"]').val(),
+		status   : $('input[name="status"]:checked').val(),
+    }
+    $.post("{:url('update')}", submitData, function(data) {
+		if (data == 0) {
+			alert("失败");
+		}else{
+			window.parent.location.reload();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	}, "json");
+}
+</script>
+
+</body>
+</html>

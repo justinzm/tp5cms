@@ -1,0 +1,154 @@
+{include file="public/header"/}
+<article class="page-container col-xs-6">
+	<table class="table table-border table-bordered table-hover table-bg ">
+		<thead>
+			<tr class="text-c">
+				<th width="25"></th>
+				<th width="80">ID</th>
+				<th width="120">关键词</th>
+				<th width="">图文标题</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="witlist" id="witlist"}
+				<tr class="text-c">					
+					<td><input type="checkbox" name="did" value="{$witlist.id}" class="check_xz"></td>
+					<td>{$witlist.id}</td>
+					<td>{$witlist.keyword}</td>
+					<td class="text-l">{$witlist.title}</td>
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+</article>
+<article class="page-container col-xs-6">
+	<form action="" class="form form-horizontal" id="form-menu-add">
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-3 text-r"><span class="c-red">*</span> 关键字：</label>
+			<div class="formControls col-xs-7 col-sm-7">
+				<input type="text" class="input-text" placeholder="" name="keyword" datatype="s1-20" errormsg="关键词至少1个字符,最多20个字符！" nullmsg="关键词必须输入">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-3 text-r"><span class="c-red">*</span> 多图文标题：</label>
+			<div class="formControls col-xs-7 col-sm-7">
+				<input type="text" class="input-text" placeholder="" name="title" datatype="s1-20" errormsg="多图文标题至少1个字符,最多20个字符！" nullmsg="多图文标题必须输入">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-3 text-r"><span class="c-red">*</span> 图文内容：</label>
+			<div class="formControls col-xs-7 col-sm-7">
+				<ol id="wlist"></ol>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-3">类型：</label>
+			<div class="formControls col-xs-7 col-sm-7 skin-minimal">
+				<div class="radio-box">
+					<input name="type" type="radio" id="status-5" value="1" checked>
+					<label for="status-5">完全匹配</label>
+				</div>
+				<div class="radio-box">
+					<input name="type" type="radio" id="status-6" value="2">
+					<label for="status-6">模糊匹配</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-3">状态：</label>
+			<div class="formControls col-xs-7 col-sm-7 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" value="1" checked>
+					<label for="status-1">启动</label>
+				</div>
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-2" value="0">
+					<label for="status-2">停用</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-4 col-sm-4 col-xs-offset-2 col-sm-offset-2">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/validform/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+var wtiarr = new Array;
+{volist name="witlists" id="witlists" key="k"}
+  wtiarr[{$k}] = new Array("{$witlists['id']}","{$witlists['title']}");
+{/volist}
+
+$(function(){
+	var imgs = "0,";
+	var str = document.getElementById("wlist");
+	$(".check_xz").click(function(){
+    	str.innerHTML ="";
+	    if($(this).is(":checked")){
+			
+	    	if(imgs.indexOf($(this).val() + ",") <= 0){
+	        	imgs += $(this).val() + ",";
+	        	var a = imgs.split(",");
+		        for(i = 1; i < a.length-1; i++){
+		        	for(j = 1; j < wtiarr.length; j++){
+			            if(wtiarr[j][0] == a[i]){
+			            	str.innerHTML += "<p>" + wtiarr[j][1] + "</p>";
+			        	}
+		        	}
+		        }	        
+	    	}
+    	}else{ 
+        	imgs = imgs.replace($(this).val() + ",","");
+        	var a=imgs.split(",");        
+        	for(i=1;i<a.length-1;i++){
+        		for(j=1;j<wtiarr.length;j++){
+        			if(wtiarr[j][0]==a[i]){
+            			str.innerHTML += "<li>" + wtiarr[j][1] + "</li>";
+            		}
+          		}
+        	}
+    	}
+	});
+
+	$(".form").Validform({
+		tiptype:2,
+		callback:function(form){
+			var check=confirm("您确定要提交表单吗？");
+			if(check){
+				ajaxSubmitBtn(imgs);
+			}			
+			return false;
+		}
+	});
+});
+
+function ajaxSubmitBtn(imgs){
+	var submitData = {
+		keyword     : $('input[name="keyword"]').val(),
+		title       : $('input[name="title"]').val(),
+		wid         : imgs.replace("0,",""),
+		status      : $('input[name="status"]:checked').val(),
+		type        : $('input[name="type"]:checked').val(),
+    }
+    $.post("{:url('WxImgs/insert')}", submitData, function(data) {
+		if (data == 0) {
+			alert("失败");
+		}else{
+			window.parent.location.reload();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	}, "json");
+}
+</script> 
+</body>
+</html>

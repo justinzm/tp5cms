@@ -1,0 +1,132 @@
+{include file="public/header"/}
+<article class="page-container">
+	<form action="" class="form form-horizontal" id="form-menu-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">上级菜单：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select name="pid" class="select">
+						<option value="0">一级菜单</option>
+						{volist name="arlist" id="arlist"}
+							<option value="{$arlist.id}" {if condition="$arfind.id==$arlist.id"} disabled="disabled"{/if} {if condition="$arfind.pid==$arlist.id"} selected="selected"{/if}>{neq name="arlist.level" value="1"}|{php}for($i=1;$i<$arlist['level'];$i++){echo ' ----';}{/php}{/neq} {$arlist.title}</option>
+						{/volist}
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> 菜单名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="title" value="{$arfind.title}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">控制器方法：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="请输入控制器方法 如：admin/Index/index" name="name" value="{$arfind.name}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">图标：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="（选填）如：&#xe654;" name="icon" value="{$arfind.icon}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">排序：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="sort" value="{$arfind.sort}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">状态：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" value="1" {eq name="arfind.status" value="1"} checked="checked"{/eq}>
+					<label for="status-1">显示</label>
+				</div>
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-2" value="0" {eq name="arfind.status" value="0"} checked="checked"{/eq}>
+					<label for="status-2">隐藏</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">备注：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="condition" cols="" rows="" class="textarea"  placeholder="备注写点什么……" onKeyUp="textarealength(this,100)">{$arfind.condition}</textarea>
+				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+			</div>
+		</div>
+		<input name="id" type="hidden" value="{$arfind.id}">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;编辑&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	$("#form-menu-add").validate({
+		rules:{
+			title:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			sort:{
+				number:true,
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			ajaxSubmit();
+		}
+	});
+});
+
+function ajaxSubmit(){
+	var submitData = {
+		id       	: $('input[name="id"]').val(),
+		pid         : $('select[name="pid"]').val(),
+		title       : $('input[name="title"]').val(),
+		name        : $('input[name="name"]').val(),
+		icon        : $('input[name="icon"]').val(),
+		type        : 1,
+		sort        : $('input[name="sort"]').val(),
+		status      : $('input[name="status"]:checked').val(),
+		condition   : $('textarea[name="condition"]').val(),
+    }
+    $.post("{:url('Menu/update')}", submitData, function(data) {
+		if (data == 0) {
+			alert("失败");
+		}else{
+			window.parent.location.reload();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	}, "json");
+}
+</script>
+
+</body>
+</html>

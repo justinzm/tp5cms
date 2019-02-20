@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{$wifind.title}</title>
+		<meta name="keywords" content="{$confind.metakeys}" />
+		<meta name="description" content="{$confind.metadesc}" />
+		<meta content="no-cache,must-revalidate" http-equiv="Cache-Control"> <!-- 清除缓存 -->
+		<meta content="no-cache" http-equiv="pragma"> <!-- 禁止浏览器在本地计算机缓存当前页面 -->
+		<meta content="telephone=yes, address=yes" name="format-detection"> <!-- 支持电话与地址 -->
+		<link rel='stylesheet' href='__PUBLIC__/font-awesome/css/font-awesome.css' type='text/css' media='all' />
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/wx_static/css/wx-page.css" media="all"/>
+		<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<div class="rich_media">
+			<div class="rich_media_inner">
+				<div id="page-content">
+					<div id="img-content" class="rich_media_area_primary">
+						<h2 class="rich_media_title" id="activity-name">{$wifind.title}</h2>
+					</div>
+
+					<div class="rich_media_meta_list" style="padding-bottom:15px;">
+						<em class="rich_media_meta">{$wifind.create_time}</em>
+						<a class="rich_media_meta " href="weixin://profile/{$confind.wxid}" id="post-user">{$confind.wxname}</a>
+					</div>
+				</div>
+			</div>
+
+			{eq name="wifind.is_img" value="1"}
+			<div class="rich_media_thumb_wrp">
+				<img src="__ROOT__/{$wifind.img}" class="rich_media_thumb" />
+			</div>
+			{/eq}
+
+			<div class="rich_media_content" id="js_content">
+				{php}echo htmlspecialchars_decode($wifind['content']);{/php}
+			</div>
+
+			<footer>
+				阅读 {$wifind.hits} &nbsp;&nbsp;<a herf="#" id="pbtn"><i class="icon-hand-up"></i> <span class="praise">{$wifind.praise}</span></a>
+			</footer>
+		</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>
+
+<script type="text/javascript">
+wx.config({
+    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appId: '{$signPackage["appId"]}', // 必填，公众号的唯一标识
+    timestamp: {$signPackage['timestamp']}, // 必填，生成签名的时间戳
+    nonceStr: '{$signPackage["nonceStr"]}', // 必填，生成签名的随机串
+    signature: '{$signPackage["signature"]}',// 必填，签名，见附录1
+    jsApiList: [
+      'checkJsApi',
+      'onMenuShareTimeline',
+      'onMenuShareAppMessage',
+      'onMenuShareQQ',
+      'onMenuShareWeibo',
+    ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+
+});
+
+
+wx.ready(function () {
+  // 在这里调用 API
+	  wx.onMenuShareTimeline({
+	    title: '{$wifind.title}', // 分享标题
+	    link: '{$confind.siteurl}/wx/Page/page/id/{$wifind.id}', // 分享链接
+	    imgUrl: '__ROOT__/{$wifind.img}', // 分享图标
+	    success: function () {
+	        // 用户确认分享后执行的回调函数
+	    },
+	    cancel: function () {
+	        // 用户取消分享后执行的回调函数
+	    }
+	});
+
+	wx.onMenuShareAppMessage({
+	    title: '{$wifind.title}', // 分享标题
+	    desc: '{$wifind.intro}', // 分享描述
+	    link: '{$confind.siteurl}/wx/Page/page/id/{$wifind.id}', // 分享链接
+	    imgUrl: '__ROOT__/{$wifind.img}', // 分享图标
+	    type: '', // 分享类型,music、video或link，不填默认为link
+	    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+	    success: function () {
+	        // 用户确认分享后执行的回调函数
+	    },
+
+	    cancel: function () {
+	        // 用户取消分享后执行的回调函数
+	    }
+	});
+});
+
+wx.error(function (res) {
+  alert(res.errMsg);
+});
+
+
+$(function () {
+  $("#pbtn").click(function(){
+    var submitData = {
+      id   : {$wifind['id']},
+    }
+
+    $.post('{:url("praise")}', submitData, function(data) {
+      if (data == 0) {
+         alert("点赞失败");
+      }else{
+        $(".praise").html({$wifind['praise']}+1);
+      }
+    }, "json");
+  });
+});
+
+</script>

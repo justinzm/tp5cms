@@ -1,0 +1,120 @@
+{include file="public/header"/}
+<article class="page-container">
+	<form action="" class="form form-horizontal" id="form-menu-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> 用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" name="username" value="{$aufind.username}">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"> 密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" placeholder="" name="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"> 重复密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" placeholder="" name="confirm_password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">所属权限组：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select name="group_id" class="select">
+						{volist name="aglist" id="aglist"}
+							<option value="{$aglist.id}" {eq name="aglist.id" value="$agafind.group_id"}selected = "selected"{/eq}>{$aglist.title}</option>
+						{/volist}
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">状态：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" value="1" {eq name="aufind.status" value="1"}checked{/eq}>
+					<label for="status-1">启动</label>
+				</div>
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-2" value="0" {eq name="aufind.status" value="0"}checked{/eq}>
+					<label for="status-2">停用</label>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" class="input-text" placeholder="" name="id" value="{$aufind.id}">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;编辑&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	$("#form-menu-add").validate({
+		rules:{
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			ajaxSubmit();
+		}
+	});
+});
+
+function ajaxSubmit(){
+	if($('input[name="password"]').val() != $('input[name="confirm_password"]').val()){
+		layer.msg('两次输入密码不同!',{icon:2,time:1000});
+	}
+
+	if($('input[name="password"]').val() == ""){
+		var submitData = {
+			id          : $('input[name="id"]').val(),
+			username    : $('input[name="username"]').val(),
+			group_id    : $('select[name="group_id"]').val(),
+			status      : $('input[name="status"]:checked').val(),
+	    }
+	}else{
+		var submitData = {
+			id          : $('input[name="id"]').val(),
+			password    : $('input[name="password"]').val(),
+			username    : $('input[name="username"]').val(),
+			group_id    : $('select[name="group_id"]').val(),
+			status      : $('input[name="status"]:checked').val(),
+	    }
+	}
+	
+    $.post("{:url('update')}", submitData, function(data) {
+		if (data == 0) {
+			alert("失败");
+		}else{
+			window.parent.location.reload();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	}, "json");
+}
+</script>
+
+</body>
+</html>

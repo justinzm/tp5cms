@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>ddsdsds</title>
+    </head>
+    <body>
+        sdkldsklds
+    </body>
+    <script src="__PUBLIC__/lib/CryptoJS/aes.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/lib/CryptoJS/pad-zeropadding.js" type="text/javascript"></script>
+    <script>
+        function encrypt(str,key) {
+            key = CryptoJS.enc.Utf8.parse(key?key:"1234567890123456");// 秘钥
+            var iv= CryptoJS.enc.Utf8.parse('justin2017zm2017');//向量iv
+            var encrypted = CryptoJS.AES.encrypt(str, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding });
+            return encrypted.toString();
+        }
+        /**
+        * 解密
+        * @param str
+        */
+        function decrypt(str) {
+            var key = CryptoJS.enc.Utf8.parse("1234567890123456");// 秘钥
+            var iv=    CryptoJS.enc.Utf8.parse('justin2017zm2017');//向量iv
+            var decrypted = CryptoJS.AES.decrypt(str,key,{iv:iv,padding:CryptoJS.pad.ZeroPadding});
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+        //调用
+        //加密
+        console.log(encrypt("sign=gsdata123456&version=v1"));
+        //解密
+        console.log(decrypt("YQMdzM3U823StT2wpdeMMEemQcNwVl1CwSzVeT2SFQE="));
+    </script>
+</html>

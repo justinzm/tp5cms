@@ -1,0 +1,241 @@
+{include file="public/header"/}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> {$navmenutitle} <span class="c-gray en">&gt;</span> {$navmenutitlenav} <a class="btn btn-success radius r refresh" id="btn-refresh" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="add('添加文章','add.html','','520')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a></span> <span class="r">共有数据：<strong>{$count}</strong> 条</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="50">ID</th>
+				<th width="">文章标题</th>
+				<th width="70">所属单元</th>
+				<th width="70">所属分类</th>
+				<th width="70">来源/作者</th>
+				<th width="50">置顶</th>
+				<th width="50">排序</th>
+				<th width="100">发布时间</th>
+				<th width="70">状态</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="alist" id="alist"}
+				<tr class="text-c">					
+					<td><input type="checkbox" name="did" value="{$alist.id}"></td>
+					<td>{$alist.id}</td>
+					<td class="text-l">{$alist.title}</td>
+					<td>{$alist.s_id_title}</td>
+					<td>{$alist.c_id_title}</td>
+					<td>{$alist.author}</td>
+					<td class="td-istop">
+						{eq name="alist.istop" value="0"}
+							<a class="text-de-none" onClick="ytop(this,{$alist.id})" href="javascript:;" title="不置顶">
+								<i class="Hui-iconfont">&#xe608;</i>
+							</a>
+						{else/}
+							<a class="text-de-none" onClick="ntop(this,{$alist.id})" href="javascript:;" title="置顶">
+								<i class="Hui-iconfont">&#xe6a8;</i>
+							</a>
+						{/eq}
+					</td>
+					<td>{$alist.ordernum}</td>
+					<td>{$alist.addtime|msubstr=0,10,'utf-8',false}</td>
+					<td class="td-status">
+						{eq name="alist.status" value="1"}
+							<span class="label label-success radius">已启用</span>
+						{else/}
+							<span class="label label-defaunt radius">已停用</span>
+						{/eq}
+					</td>
+					<td class="td-manage">
+						{eq name="alist.status" value="1"}
+							<a class="text-de-none" onClick="stop(this,{$alist.id})" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
+						{else/}
+							<a class="text-de-none" onClick="start(this,{$alist.id})" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe6e1;</i></a>
+						{/eq}
+						<a title="编辑" href="javascript:;" onclick="edit('编辑','edit.html?id={$alist.id}','','520')" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a title="删除" href="javascript:;" onclick="del(this,{$alist.id})" class="ml-5"><i class="Hui-iconfont">&#xe6e2;</i></a>
+					</td>
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+	</div>
+</div>
+{include file="public/footer_js" /}
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  {"orderable":false,"aTargets":[0,2,3,4,5,6,9,10]}// 制定列不参与排序
+		]
+	});
+	$('.table-sort tbody').on( 'click', 'tr', function () {
+		if ( $(this).hasClass('selected') ) {
+			$(this).removeClass('selected');
+		}
+		else {
+			//$(this).$('tr.selected').removeClass('selected');
+			$(this).addClass('selected');
+		}
+	});
+});
+
+
+
+
+/*添加*/
+function add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*置顶*/
+function ytop(obj,id){
+	layer.confirm('确认要置顶吗？',function(index){
+		var submitData = {
+			id : id,
+			istop:0,
+	    }
+	    $.post("{:url('Article/istop')}", submitData, function(data) {
+	    	if(data['code'] == 0){
+	    		layer.msg('没有权限!',{icon: 5,time:1000});
+	    		return;
+	    	}
+			if (data['code'] == 400) {
+				alert("失败");
+			}else{
+				$(obj).parents("tr").find(".td-istop").prepend('<a class="text-de-none" onClick="ntop(this,'+id+')" href="javascript:;" title="置顶"><i class="Hui-iconfont">&#xe6a8;</i></a>');
+				$(obj).remove();
+				layer.msg('已置顶!',{icon: 6,time:1000});				
+			}
+		}, "json");	
+	});	
+}
+
+function ntop(obj,id){
+	layer.confirm('确认要不置顶吗？',function(index){
+		var submitData = {
+			id : id,
+			istop:1,
+	    }
+	    $.post("{:url('Article/istop')}", submitData, function(data) {
+	    	if(data['code'] == 0){
+	    		layer.msg('没有权限!',{icon: 5,time:1000});
+	    		return;
+	    	}
+			if (data['code'] == 400) {
+				alert("失败");
+			}else{
+				$(obj).parents("tr").find(".td-istop").prepend('<a class="text-de-none" onClick="ytop(this,'+id+')" href="javascript:;" title="不置顶"><i class="Hui-iconfont">&#xe608;</i></a>');
+				$(obj).remove();
+				layer.msg('已取消置顶!',{icon: 5,time:1000});				
+			}
+		}, "json");	
+	});
+}
+
+/*停用*/
+function stop(obj,id){
+	layer.confirm('确认要停用吗？',function(index){
+		var submitData = {
+			id : id,
+			status:1,
+	    }
+	    $.post("{:url('Article/status')}", submitData, function(data) {
+	    	if(data['code'] == 0){
+	    		layer.msg('没有权限!',{icon: 5,time:1000});
+	    		return;
+	    	}
+			if (data['code'] == 400) {
+				alert("失败");
+			}else{				
+				$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="start(this,'+id+')" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe6e1;</i></a>');
+				$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+				$(obj).remove();
+				layer.msg('已停用!',{icon: 5,time:1000});				
+			}
+		}, "json");	
+	});	
+}
+
+/*启用*/
+function start(obj,id){
+	layer.confirm('确认要启用吗？',function(index){
+		var submitData = {
+			id : id,
+			status:0,
+	    }
+	    $.post("{:url('Article/status')}", submitData, function(data) {
+	    	if(data['code'] == 0){
+	    		layer.msg('没有权限!',{icon: 5,time:1000});
+	    		return;
+	    	}
+			if (data['code'] == 400) {
+				alert("失败");
+			}else{
+				$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="stop(this,'+id+')" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>');
+				$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+				$(obj).remove();
+				layer.msg('已启用!',{icon: 6,time:1000});				
+			}
+		}, "json");	
+	});
+}
+/*编辑*/
+function edit(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*删除*/
+function del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		var submitData = {
+			did : id,
+	    }
+	    $.post("{:url('Article/delete')}", submitData, function(data) {
+	    	if(data['code'] == 0){
+	    		layer.msg('没有权限!',{icon: 5,time:1000});
+	    		return;
+	    	}
+			if (data['code'] == 400) {
+				alert("失败");
+			}else{				
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});				
+			}
+		}, "json");
+	});
+}
+
+//选择删除
+function datadel(){
+	var did = document.getElementsByName('did');
+	var value = new Array();
+	for(var i = 0; i < did.length; i++){
+		if(did[i].checked){
+			value.push(did[i].value);
+		}
+	}
+
+	var submitData = {
+		did : value,
+    }
+    $.post("{:url('Article/delete')}", submitData, function(data) {
+    	if(data['code'] == 0){
+    		layer.msg('没有权限!',{icon: 5,time:1000});
+    		return;
+    	}
+		if (data['code'] == 400) {
+			alert("请选择删除项");
+		}else{
+			window.location.reload();
+			layer.msg('已删除!',{icon:1,time:1000});
+		}
+	}, "json");
+}
+</script> 
+</body>
+</html>

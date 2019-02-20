@@ -1,0 +1,200 @@
+{include file="public/header"/}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> {$navmenutitle} <span class="c-gray en">&gt;</span> {$navmenutitlenav} <a class="btn btn-success radius r refresh" id="btn-refresh" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form class="form form-horizontal" id="form-config-add">
+		<div id="tab-system" class="HuiTab">
+			<div class="tabBar cl"><span>基本设置</span><span>微信设置</span><!-- <span>邮件设置</span><span>其他设置</span> --></div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>系统(站点)名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-title" name="sitename" placeholder="控制在2个字、50个字节以内" value="{$cfind.sitename}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 站点关键词：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-Keywords" name="metakeys" placeholder="5个左右,8汉字以内,用英文,隔开" value="{$cfind.metakeys}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 站点描述：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-description" name="metadesc" placeholder="空制在80个汉字，160个字符以内" value="{$cfind.metadesc}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">所属公司名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="company" value="{$cfind.company}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">该站点网址：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="siteurl" placeholder="http://" value="{$cfind.siteurl}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">备案号：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-icp" name="icp" placeholder="京ICP备00000000号" value="{$cfind.icp}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">联系电话：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-copyright" name="tel" placeholder="000-88888888" value="{$cfind.tel}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">联系邮箱：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-copyright" name="email" placeholder="@" value="{$cfind.email}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">联系QQ：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-copyright" name="qq" placeholder="" value="{$cfind.qq}" class="input-text">
+					</div>
+				</div>
+				
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">所在地址：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-copyright" name="address" placeholder="" value="{$cfind.address}" class="input-text">
+					</div>
+				</div>
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">微信公众号名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="wxname" class="input-text" value="{$cfind.wxname}">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">微信号：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="wxnumber" placeholder="" value="{$cfind.wxnumber}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">公众号原始ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="wxid" placeholder="" value="{$cfind.wxid}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">appID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="wxappid" placeholder="" value="{$cfind.wxappid}" class="input-text">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">appsecret：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="website-static" name="wxappsecret" placeholder="" value="{$cfind.wxappsecret}" class="input-text">
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin_static/js/H-ui.admin.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$("#form-config-add").validate({
+		rules:{
+			sitename:{
+				required:true,
+				minlength:2,
+				maxlength:50
+			},
+			metakeys:{
+				required:true,
+				minlength:2,
+				maxlength:50
+			},
+			metadesc:{
+				required:true,
+				minlength:2,
+				maxlength:300
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			ajaxSubmit();
+		}
+	});
+
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	$.Huitab("#tab-system .tabBar span","#tab-system .tabCon","current","click","0");
+});
+
+function ajaxSubmit(){
+	var submitData = {
+		sitename     : $('input[name="sitename"]').val(),
+		metakeys     : $('input[name="metakeys"]').val(),
+		metadesc     : $('input[name="metadesc"]').val(),
+		company      : $('input[name="company"]').val(),
+		siteurl      : $('input[name="siteurl"]').val(),
+		icp          : $('input[name="icp"]').val(),
+		tel        	 : $('input[name="tel"]').val(),
+		email        : $('input[name="email"]').val(),
+		qq        	 : $('input[name="qq"]').val(),
+		address      : $('input[name="address"]').val(),
+
+		wxname       : $('input[name="wxname"]').val(),
+		wxnumber     : $('input[name="wxnumber"]').val(),
+		wxid         : $('input[name="wxid"]').val(),
+		wxappid      : $('input[name="wxappid"]').val(),
+		wxappsecret  : $('input[name="wxappsecret"]').val(),
+		id : 1
+    }
+    $.post("{:url('Conf/update')}", submitData, function(data) {
+    	if(data['code'] == 0){
+    		layer.msg('没有权限!',{icon: 5,time:1000});
+    		return;
+    	}
+		if (data['code']== 400) {
+			alert("失败");
+		}else{
+			layer.msg('已保存！',{icon: 6,time:1000});
+		}
+	}, "json");
+}
+</script>
+</body>
+</html>
